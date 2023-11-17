@@ -7,5 +7,7 @@ import gustavo.laureano.parklot.domain.Pessoa;
 
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, Integer> {
+	
+	public Pessoa findByCpf(String cpf);
 
 }
