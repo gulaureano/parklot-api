@@ -1,0 +1,1 @@
+insert into TOTAL_VAGAS (TOTAL_VAGAS) values (200);
