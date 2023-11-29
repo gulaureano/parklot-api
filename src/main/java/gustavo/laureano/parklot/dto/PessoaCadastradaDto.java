@@ -16,6 +16,8 @@ public class PessoaCadastradaDto {
 	private String cpf;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
+	private Boolean isCliente;
+	private Boolean isLocador;
 	private String mensagemRetorno;
 	
 	public static Pessoa convertePessoa(PessoaCadastradaDto pessoaDto) {
@@ -23,6 +25,8 @@ public class PessoaCadastradaDto {
 		pessoa.setNome(pessoaDto.getNome());
 		pessoa.setDataNascimento(pessoaDto.getDataNascimento());
 		pessoa.setCpf(pessoaDto.getCpf());
+		pessoa.setIsCliente(pessoaDto.getIsCliente());
+		pessoa.setIsLocador(pessoaDto.getIsLocador());
 		return pessoa;
 		
 	}
