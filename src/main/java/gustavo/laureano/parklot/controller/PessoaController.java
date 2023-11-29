@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gustavo.laureano.parklot.dto.PessoaCadastradaDto;
 import gustavo.laureano.parklot.dto.PessoaDto;
 import gustavo.laureano.parklot.exception.PessoaExistenteException;
+import gustavo.laureano.parklot.exception.PessoaInexistenteException;
 import gustavo.laureano.parklot.service.PessoaService;
 
 @RestController
@@ -33,10 +34,19 @@ public class PessoaController {
 		if (mensagem == null) {
 			mensagem = "O CPF digitado já existe na nossa base de dados";
 			pessoaDto.setMensagemRetorno(mensagem);
-			throw new PessoaExistenteException(pessoaDto);
+			throw new PessoaExistenteException();
 		} 
 		pessoaDto.setMensagemRetorno(mensagem);
 		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaDto);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<PessoaDto> getPessoa(@PathVariable Integer id) throws PessoaInexistenteException {
+		PessoaDto pessoaDto = service.recuperaPessoaDto(id);
+		if (pessoaDto == null) {
+			throw new PessoaInexistenteException();
+		}
+		return ResponseEntity.ok().body(pessoaDto);
 	}
 
 }
