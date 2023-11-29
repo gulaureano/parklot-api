@@ -18,7 +18,7 @@ public class PessoaControllerException extends Exception {
 	
 	@ExceptionHandler(PessoaInexistenteException.class)
 	public ResponseEntity<String> pessoaInexistenteException() {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não foi possível encontrar um cliente ou locador pelo ID enviado");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não foi possível encontrar um cliente ou locador");
 	}
 	
 	
