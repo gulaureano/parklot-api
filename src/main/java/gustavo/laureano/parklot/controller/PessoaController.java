@@ -46,7 +46,7 @@ public class PessoaController {
 		}
 		PessoaDto pessoaDto = service.recuperaPessoaDto(id);
 		if (pessoaDto == null) {
-			throw new PessoaInexistenteException();
+			throw new PessoaInexistenteException("Não ");
 		}
 		return ResponseEntity.ok().body(pessoaDto);
 	}
@@ -55,7 +55,7 @@ public class PessoaController {
 	public ResponseEntity<List<PessoaDto>> findAll() throws PessoaInexistenteException {
 		List<PessoaDto> pessoasDto = service.findAll();
 		if (pessoasDto == null || pessoasDto.isEmpty()) {
-			throw new PessoaInexistenteException();
+			throw new PessoaInexistenteException("Não possui dados de Pessoa no banco");
 		}
 		return ResponseEntity.ok().body(pessoasDto);
 	}

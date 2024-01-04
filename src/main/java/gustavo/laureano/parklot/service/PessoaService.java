@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +11,6 @@ import gustavo.laureano.parklot.domain.Pessoa;
 import gustavo.laureano.parklot.dto.PessoaCadastradaDto;
 import gustavo.laureano.parklot.dto.PessoaDeleteDto;
 import gustavo.laureano.parklot.dto.PessoaDto;
-import gustavo.laureano.parklot.exception.PessoaExistenteException;
 import gustavo.laureano.parklot.exception.PessoaInexistenteException;
 import gustavo.laureano.parklot.repository.PessoaRepository;
 
@@ -33,9 +30,12 @@ public class PessoaService {
 		return null;
 	}
 
-	public PessoaDto recuperaPessoaDto(Integer id) throws EntityNotFoundException {
-			Pessoa pessoa = repository.getReferenceById(id);
-			return new PessoaDto(pessoa.getNome(), pessoa.getCpf(), pessoa.getDataNascimento(), pessoa.getIsCliente(), pessoa.getIsLocador());
+	public PessoaDto recuperaPessoaDto(Integer id) throws PessoaInexistenteException {
+			Optional<Pessoa> pessoa = repository.findById(id);
+			if (!pessoa.isPresent()) {
+				throw new PessoaInexistenteException("Não existe pessoa com este ID: " + id);
+			}
+			return new PessoaDto(pessoa.get().getNome(), pessoa.get().getCpf(), pessoa.get().getDataNascimento(), pessoa.get().getIsCliente(), pessoa.get().getIsLocador());
 	}
 
 	public PessoaDeleteDto deletaPessoa(PessoaDeleteDto pessoaDeleteDto) throws PessoaInexistenteException {
