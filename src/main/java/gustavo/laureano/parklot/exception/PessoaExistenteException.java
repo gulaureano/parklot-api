@@ -6,6 +6,16 @@ public class PessoaExistenteException extends Exception {
 
 	public PessoaExistenteException() {
 	}
+
+	public PessoaExistenteException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public PessoaExistenteException(String message) {
+		super(message);
+	}
+	
+	
 	
 	
 	
