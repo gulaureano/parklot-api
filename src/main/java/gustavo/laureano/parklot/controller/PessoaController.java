@@ -1,5 +1,7 @@
 package gustavo.laureano.parklot.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,6 @@ public class PessoaController {
 	@Autowired
 	PessoaService service;
 	
-	@GetMapping
-	public String hello() {
-		return "Hello Pessoa";
-	}
-	
 	@PostMapping
 	public ResponseEntity<PessoaCadastradaDto> cadastrarPessoa(@RequestBody PessoaCadastradaDto pessoaDto) throws PessoaExistenteException{
 		String mensagem = service.cadastrarPessoa(pessoaDto);
@@ -44,6 +41,9 @@ public class PessoaController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<PessoaDto> getPessoa(@PathVariable Integer id) throws PessoaInexistenteException {
+		if(id == null) {
+			throw new PessoaInexistenteException("ID nulo");
+		}
 		PessoaDto pessoaDto = service.recuperaPessoaDto(id);
 		if (pessoaDto == null) {
 			throw new PessoaInexistenteException();
@@ -51,10 +51,20 @@ public class PessoaController {
 		return ResponseEntity.ok().body(pessoaDto);
 	}
 	
+	@GetMapping
+	public ResponseEntity<List<PessoaDto>> findAll() throws PessoaInexistenteException {
+		List<PessoaDto> pessoasDto = service.findAll();
+		if (pessoasDto == null || pessoasDto.isEmpty()) {
+			throw new PessoaInexistenteException();
+		}
+		return ResponseEntity.ok().body(pessoasDto);
+	}
+	
 	@DeleteMapping
-	public ResponseEntity<String> deletarPessoa(@RequestBody PessoaDeleteDto pessoaDeleteDto) {
-		service.deletaPessoa(pessoaDeleteDto);
-		return null;
+	public ResponseEntity<PessoaDeleteDto> deletarPessoa(@RequestBody PessoaDeleteDto pessoaDeleteDto) throws PessoaInexistenteException {
+		PessoaDeleteDto pessoaDelete = service.deletaPessoa(pessoaDeleteDto);
+		pessoaDelete.setMensagem("Pessoa: " + pessoaDelete.getNome() + " com CPF: " + pessoaDelete.getCpf() + " deletado com sucesso");
+		return ResponseEntity.ok(pessoaDelete);
 	}
 
 }

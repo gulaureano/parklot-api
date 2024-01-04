@@ -1,6 +1,10 @@
 package gustavo.laureano.parklot.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,49 +33,49 @@ public class PessoaService {
 		return null;
 	}
 
-	public PessoaDto recuperaPessoaDto(Integer id) throws PessoaInexistenteException {
-		Pessoa pessoa = repository.getReferenceById(id);
-		if (pessoa != null) {
+	public PessoaDto recuperaPessoaDto(Integer id) throws EntityNotFoundException {
+			Pessoa pessoa = repository.getReferenceById(id);
 			return new PessoaDto(pessoa.getNome(), pessoa.getCpf(), pessoa.getDataNascimento(), pessoa.getIsCliente(), pessoa.getIsLocador());
-		}
-		throw new PessoaInexistenteException();
 	}
 
-	public void deletaPessoa(PessoaDeleteDto pessoaDeleteDto) {
+	public PessoaDeleteDto deletaPessoa(PessoaDeleteDto pessoaDeleteDto) throws PessoaInexistenteException {
 		if (pessoaDeleteDto.getId() != null) {
-			deletaPorId(pessoaDeleteDto.getId());
+			return deletaPorId(pessoaDeleteDto.getId());
 		}
 		
 		if (pessoaDeleteDto.getCpf() != null) {
-			deletaPorCPF(pessoaDeleteDto.getCpf());
+			return deletaPorCPF(pessoaDeleteDto.getCpf());
 		} else {
-			throw new NullPointerException();
+			throw new PessoaInexistenteException("Os campos informados estão nulos");
 		}
 	}
 
-	private void deletaPorCPF(String cpf) {
+	private PessoaDeleteDto deletaPorCPF(String cpf) throws PessoaInexistenteException {
 		Pessoa pessoa = repository.findByCpf(cpf);
-		try {
-			if(pessoa == null) {
-				throw new PessoaInexistenteException();
-			}
-			repository.delete(pessoa);
-		} catch (PessoaInexistenteException e) {
-			e.getMessage();
+		if(pessoa == null) {
+			throw new PessoaInexistenteException("CPF inexistente no banco " + cpf);
 		}
+		PessoaDeleteDto pessoaDeletada = new PessoaDeleteDto(pessoa.getNome(), pessoa.getCpf(), pessoa.getId());
+		repository.delete(pessoa);
+		return pessoaDeletada;
 		
 	}
 
-	private void deletaPorId(Integer id) {
+	private PessoaDeleteDto deletaPorId(Integer id) throws PessoaInexistenteException {
 		Optional<Pessoa> pessoa = repository.findById(id);
-		try {
+		
 			if (!pessoa.isPresent()) {
-				throw new PessoaInexistenteException();
+				throw new PessoaInexistenteException("ID inexistente no banco " + id);
 			}
+			PessoaDeleteDto pessoaDeletada = new PessoaDeleteDto(pessoa.get().getNome(), pessoa.get().getCpf(), pessoa.get().getId());
 			repository.delete(pessoa.get());
-		} catch (PessoaInexistenteException e) {
-			e.getMessage();
-		}
+			return pessoaDeletada;
+	}
+
+	public List<PessoaDto> findAll() {
+		List<Pessoa> pessoas = repository.findAll();
+		return pessoas.stream().map(pessoa -> new PessoaDto(pessoa)).collect(Collectors.toList());
+		
 	}
 
 }
