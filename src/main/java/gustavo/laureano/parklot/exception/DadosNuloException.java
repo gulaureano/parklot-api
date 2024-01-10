@@ -1,6 +1,6 @@
 package gustavo.laureano.parklot.exception;
 
-public class DadosNuloException extends Exception {
+public class DadosNuloException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

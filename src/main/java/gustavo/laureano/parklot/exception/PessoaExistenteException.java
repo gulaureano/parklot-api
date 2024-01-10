@@ -1,6 +1,6 @@
 package gustavo.laureano.parklot.exception;
 
-public class PessoaExistenteException extends Exception {
+public class PessoaExistenteException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

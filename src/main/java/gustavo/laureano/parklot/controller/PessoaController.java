@@ -31,14 +31,13 @@ public class PessoaController {
 	PessoaService service;
 	
 	@PostMapping
-	public ResponseEntity<PessoaCadastradaDto> cadastrarPessoa(@Valid @RequestBody PessoaCadastradaDto pessoaDto) throws DadosNuloException, PessoaExistenteException{
+	public ResponseEntity<PessoaCadastradaDto> cadastrarPessoa(@Valid @RequestBody PessoaCadastradaDto pessoaDto) {
 		if (pessoaDto == null) {
 			throw new DadosNuloException("Dados Nulo");
 		}
 		String mensagem = service.cadastrarPessoa(pessoaDto);
 		if (mensagem == null) {
-			mensagem = "O CPF digitado já existe na nossa base de dados";
-			pessoaDto.setMensagemRetorno(mensagem);
+			throw new PessoaExistenteException("O CPF digitado já existe na nossa base de dados");
 			
 		} 
 		pessoaDto.setMensagemRetorno(mensagem);
@@ -46,7 +45,7 @@ public class PessoaController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PessoaDto> getPessoa(@PathVariable Integer id) throws PessoaInexistenteException {
+	public ResponseEntity<PessoaDto> getPessoa(@PathVariable Integer id) {
 		if(id == null) {
 			throw new PessoaInexistenteException("ID nulo");
 		}
@@ -58,7 +57,7 @@ public class PessoaController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<PessoaDto>> findAll() throws PessoaInexistenteException {
+	public ResponseEntity<List<PessoaDto>> findAll() {
 		List<PessoaDto> pessoasDto = service.findAll();
 		if (pessoasDto == null || pessoasDto.isEmpty()) {
 			throw new PessoaInexistenteException("Não possui dados de Pessoa no banco");
@@ -67,7 +66,7 @@ public class PessoaController {
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<PessoaDeleteDto> deletarPessoa(@RequestBody PessoaDeleteDto pessoaDeleteDto) throws PessoaInexistenteException {
+	public ResponseEntity<PessoaDeleteDto> deletarPessoa(@RequestBody PessoaDeleteDto pessoaDeleteDto) {
 		PessoaDeleteDto pessoaDelete = service.deletaPessoa(pessoaDeleteDto);
 		pessoaDelete.setMensagem("Pessoa: " + pessoaDelete.getNome() + " com CPF: " + pessoaDelete.getCpf() + " deletado com sucesso");
 		return ResponseEntity.ok(pessoaDelete);

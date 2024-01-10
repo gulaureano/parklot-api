@@ -30,7 +30,7 @@ public class PessoaService {
 		return null;
 	}
 
-	public PessoaDto recuperaPessoaDto(Integer id) throws PessoaInexistenteException {
+	public PessoaDto recuperaPessoaDto(Integer id) {
 			Optional<Pessoa> pessoa = repository.findById(id);
 			if (!pessoa.isPresent()) {
 				throw new PessoaInexistenteException("Não existe pessoa com este ID: " + id);
@@ -38,7 +38,7 @@ public class PessoaService {
 			return new PessoaDto(pessoa.get().getNome(), pessoa.get().getCpf(), pessoa.get().getDataNascimento(), pessoa.get().getIsCliente(), pessoa.get().getIsLocador());
 	}
 
-	public PessoaDeleteDto deletaPessoa(PessoaDeleteDto pessoaDeleteDto) throws PessoaInexistenteException {
+	public PessoaDeleteDto deletaPessoa(PessoaDeleteDto pessoaDeleteDto) {
 		if (pessoaDeleteDto.getId() != null) {
 			return deletaPorId(pessoaDeleteDto.getId());
 		}
@@ -50,7 +50,7 @@ public class PessoaService {
 		}
 	}
 
-	private PessoaDeleteDto deletaPorCPF(String cpf) throws PessoaInexistenteException {
+	private PessoaDeleteDto deletaPorCPF(String cpf) {
 		Pessoa pessoa = repository.findByCpf(cpf);
 		if(pessoa == null) {
 			throw new PessoaInexistenteException("CPF inexistente no banco " + cpf);
@@ -61,7 +61,7 @@ public class PessoaService {
 		
 	}
 
-	private PessoaDeleteDto deletaPorId(Integer id) throws PessoaInexistenteException {
+	private PessoaDeleteDto deletaPorId(Integer id) {
 		Optional<Pessoa> pessoa = repository.findById(id);
 		
 			if (!pessoa.isPresent()) {

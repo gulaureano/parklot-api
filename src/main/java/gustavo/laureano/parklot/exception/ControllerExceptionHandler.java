@@ -22,7 +22,6 @@ public class ControllerExceptionHandler {
 	
 	@ExceptionHandler(PessoaInexistenteException.class)
 	public ResponseEntity<ErroPadrao> pessoaInexistenteException(PessoaInexistenteException e, HttpServletRequest request) {
-		String path = request.getRequestURI();
 		ErroPadrao erro = new ErroPadrao(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), "Pessoa Inexistente", e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
@@ -30,11 +29,16 @@ public class ControllerExceptionHandler {
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErroPadrao> dadosInvalidos(MethodArgumentNotValidException e, HttpServletRequest request) {
-		String path = request.getRequestURI();
 		ValidacaoException erro = new ValidacaoException(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), "Validacao Exception", "Falha na Validação", request.getRequestURI());
 		for (FieldError ex : e.getFieldErrors()) {
 			erro.addFieldError(ex.getField(), ex.getDefaultMessage());
 		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	}
+	
+	@ExceptionHandler(ClienteInexistenteException.class)
+	public ResponseEntity<ErroPadrao> clienteInexistenteException(ClienteInexistenteException e, HttpServletRequest request) {
+		ErroPadrao erro = new ErroPadrao(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), "Cliente Inexistente", e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
 	
