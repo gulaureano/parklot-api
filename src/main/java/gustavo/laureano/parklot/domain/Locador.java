@@ -16,6 +16,13 @@ import lombok.Setter;
 @Setter
 public class Locador {
 	
+	public Locador() {
+	}
+
+	public Locador(Pessoa idPessoa) {
+		this.idPessoa = idPessoa;
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

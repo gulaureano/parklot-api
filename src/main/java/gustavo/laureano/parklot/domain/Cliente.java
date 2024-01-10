@@ -16,6 +16,17 @@ import lombok.Setter;
 @Setter
 public class Cliente {
 	
+	
+	
+	public Cliente() {
+		super();
+	}
+
+	public Cliente(Pessoa idPessoa) {
+		super();
+		this.idPessoa = idPessoa;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

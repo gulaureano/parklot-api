@@ -7,11 +7,15 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gustavo.laureano.parklot.domain.Cliente;
+import gustavo.laureano.parklot.domain.Locador;
 import gustavo.laureano.parklot.domain.Pessoa;
 import gustavo.laureano.parklot.dto.PessoaCadastradaDto;
 import gustavo.laureano.parklot.dto.PessoaDeleteDto;
 import gustavo.laureano.parklot.dto.PessoaDto;
 import gustavo.laureano.parklot.exception.PessoaInexistenteException;
+import gustavo.laureano.parklot.repository.ClienteRepository;
+import gustavo.laureano.parklot.repository.LocadorRepository;
 import gustavo.laureano.parklot.repository.PessoaRepository;
 
 @Service
@@ -19,12 +23,23 @@ public class PessoaService {
 	
 	@Autowired
 	PessoaRepository repository;
+	
+	@Autowired
+	ClienteRepository clienteRepository;
+	
+	@Autowired
+	LocadorRepository locadorRepository;
 
 	public String cadastrarPessoa(PessoaCadastradaDto pessoaDto) {
 		Pessoa pessoa = repository.findByCpf(pessoaDto.getCpf());
 		if (pessoa == null) {
 			Pessoa pessoaVolta = PessoaCadastradaDto.convertePessoa(pessoaDto);
 			repository.save(pessoaVolta);
+			if (pessoaVolta.getIsCliente().equals(true)) {
+				clienteRepository.save(new Cliente(pessoaVolta));
+			} else {
+				locadorRepository.save(new Locador(pessoaVolta));
+			}
 			return "Pessoa Cadastrada com sucesso";
 		}
 		return null;

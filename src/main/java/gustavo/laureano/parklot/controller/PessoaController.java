@@ -24,7 +24,7 @@ import gustavo.laureano.parklot.exception.PessoaInexistenteException;
 import gustavo.laureano.parklot.service.PessoaService;
 
 @RestController
-@RequestMapping("/pessoa")
+@RequestMapping("/pessoas")
 public class PessoaController {
 	
 	@Autowired

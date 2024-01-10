@@ -2,6 +2,8 @@ package gustavo.laureano.parklot.dto;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 import gustavo.laureano.parklot.domain.Pessoa;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +31,15 @@ public class PessoaDto {
 		this.isLocador = pessoa.getIsLocador();		
 	}
 	
+	@NotNull(message = "Campo NOME é obrigatório")
 	private String nome;
+	@NotNull(message = "Campo CPF é obrigatório")
 	private String cpf;
+	@NotNull(message = "Campo DATA NASC. é obrigatório")
 	private LocalDate dataNascimento;
+	@NotNull(message = "Campo CLIENTE é obrigatório")
 	private Boolean isCliente;
+	@NotNull(message = "Campo LOCADOR é obrigatório")
 	private Boolean isLocador;
 	
 
